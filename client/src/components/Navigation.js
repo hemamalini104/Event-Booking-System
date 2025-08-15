@@ -1,10 +1,12 @@
 import React from "react";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Navigation = ({ isLoggedIn, role, handleLogout }) => {
-  // role can be "attendee" or "organizer"
   const navigate = useNavigate();
+  const location = useLocation(); // Get current route
+
+  const isLoginPage = location.pathname.toLowerCase() === "/login";
 
   return (
     <Navbar bg="light" expand="lg" sticky="top" className="shadow-sm">
@@ -23,7 +25,8 @@ const Navigation = ({ isLoggedIn, role, handleLogout }) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav className="align-items-center">
-            {!isLoggedIn && (
+            {/* Show login button only if not logged in and NOT on login page */}
+            {!isLoggedIn && !isLoginPage && (
               <Button
                 variant="outline-primary"
                 className="me-2"

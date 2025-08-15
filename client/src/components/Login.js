@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Alert, Card, Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+const LoginPage = ({ setIsLoggedIn, setRole }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -31,8 +31,12 @@ const LoginPage = () => {
       if (response.ok) {
         localStorage.setItem('access', data.access);
         localStorage.setItem('refresh', data.refresh);
+        localStorage.setItem('role', data.role); // assuming backend sends role
 
-        navigate('/dashboard');
+        setIsLoggedIn(true);
+        setRole(data.role);
+
+        navigate('/');
       } else {
         setError(data.detail || 'Login failed');
       }
