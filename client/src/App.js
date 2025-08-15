@@ -12,6 +12,7 @@ import ViewEvent from './pages/ViewEvent';
 import LandingPage from './components/LandingPage';
 import Signup from './components/Signup';
 import Login from './components/Login';
+import ForgotPassword from './pages/ForgotPassword';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -49,6 +50,7 @@ function App() {
         <Route path="/view-event/:id" element={<ViewEvent />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setRole={setRole} />} />
+        <Route path="/forgot-password" element={<ForgotPassword/>}/>
       </Routes>
     </Router>
   );

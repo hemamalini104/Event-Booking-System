@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert, Card, Container, Row, Col } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // ✅ Added Link
 
 const LoginPage = ({ setIsLoggedIn, setRole }) => {
   const [email, setEmail] = useState('');
@@ -20,9 +20,7 @@ const LoginPage = ({ setIsLoggedIn, setRole }) => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/accounts/login/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
@@ -31,7 +29,7 @@ const LoginPage = ({ setIsLoggedIn, setRole }) => {
       if (response.ok) {
         localStorage.setItem('access', data.access);
         localStorage.setItem('refresh', data.refresh);
-        localStorage.setItem('role', data.role); // assuming backend sends role
+        localStorage.setItem('role', data.role);
 
         setIsLoggedIn(true);
         setRole(data.role);
@@ -82,6 +80,12 @@ const LoginPage = ({ setIsLoggedIn, setRole }) => {
                 <Button variant="primary" type="submit" className="w-100">
                   Login
                 </Button>
+
+                {/* ✅ Forgot Password link */}
+                <div className="text-center mt-3">
+                  <Link to="/forgot-password">Forgot your password?</Link>
+                </div>
+
               </Form>
             </Card.Body>
           </Card>
