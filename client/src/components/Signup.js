@@ -1,39 +1,114 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Alert, Card } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import './Login.css'; // Reusing same CSS as login
+import './Login.css';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
+    phone: '',
     email: '',
     password: '',
     confirmPassword: '',
-    role: '' // New field for Organizer or Attendee
+    role: '',
+    organizationName: '' // Only for organizer
   });
-  const [error, setError] = useState('');
+
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false); // ✅ added loading state
   const navigate = useNavigate();
 
+  // ✅ Added validation function
+  const validateField = (fieldName, value) => {
+    let error = '';
+
+    switch (fieldName) {
+      case 'username':
+        if (!value.trim()) error = 'Username is required';
+        break;
+      case 'phone':
+        if (!/^\d{10}$/.test(value)) error = 'Phone must be 10 digits';
+        break;
+      case 'email':
+        if (!/\S+@\S+\.\S+/.test(value)) error = 'Invalid email';
+        break;
+      case 'password':
+        if (value.length < 6) error = 'Password must be at least 6 characters';
+        break;
+      case 'confirmPassword':
+        if (value !== formData.password) error = 'Passwords do not match';
+        break;
+      case 'role':
+        if (!value) error = 'Role is required';
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prev) => ({
+      ...prev,
+      [fieldName]: error
+    }));
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+    validateField(name, value); // live validation
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
+
+    // Validate all fields
+    Object.keys(formData).forEach((field) => validateField(field, formData[field]));
+
+    if (Object.values(errors).some((err) => err)) {
+      return; // Don't submit if there are errors
     }
-    if (!formData.role) {
-      setError('Please select whether you are an Organizer or Attendee');
+
+    setLoading(true);
+    console.log('Signup data:', formData);
+
+    // Fake delay for signup simulation
+    setTimeout(() => {
+      setLoading(false);
+<<<<<<< HEAD
+      navigate('/dashboard');
+    }, 1000);
+=======
       return;
     }
 
-    console.log('Signup data:', formData);
-    navigate('/dashboard');
+    try {
+      const response = await axios.post('http://localhost:8000/api/accounts/register/', {
+        username : name,
+        email,
+        password
+      });
+
+      setSuccess('Signup successful! Redirecting...');
+      setLoading(false);
+
+      // If backend sends JWT token and you want to store it:
+      // localStorage.setItem('token', response.data.token);
+
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+      if (err.response && err.response.data) {
+        setError(err.response.data.detail || 'Signup failed. Please try again.');
+      } else {
+        setError('Server error. Please try again later.');
+      }
+    }
+>>>>>>> c3b583b (message)
   };
 
   return (
@@ -41,20 +116,39 @@ const Signup = () => {
       <Card className="login-card">
         <Card.Body>
           <h2 className="text-center mb-4">Create Your Account</h2>
-          {error && <Alert variant="danger" className="text-center">{error}</Alert>}
-          
+          {Object.values(errors).some((err) => err) && (
+            <Alert variant="danger" className="text-center">
+              Please fix the errors before submitting
+            </Alert>
+          )}
+
           <Form onSubmit={handleSubmit}>
-            {/* Full Name */}
+            {/* Username */}
             <Form.Group className="mb-3">
-              <Form.Label>Full Name</Form.Label>
+              <Form.Label>Username</Form.Label>
               <Form.Control
                 type="text"
-                name="name"
-                placeholder="Enter your name"
-                value={formData.name}
+                name="username"
+                placeholder="Enter your username"
+                value={formData.username}
                 onChange={handleChange}
                 required
               />
+              {errors.username && <small className="text-danger">{errors.username}</small>}
+            </Form.Group>
+
+            {/* Phone */}
+            <Form.Group className="mb-3">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control
+                type="text"
+                name="phone"
+                placeholder="Enter your phone number"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
+              {errors.phone && <small className="text-danger">{errors.phone}</small>}
             </Form.Group>
 
             {/* Email */}
@@ -68,6 +162,7 @@ const Signup = () => {
                 onChange={handleChange}
                 required
               />
+              {errors.email && <small className="text-danger">{errors.email}</small>}
             </Form.Group>
 
             {/* Password */}
@@ -81,6 +176,7 @@ const Signup = () => {
                 onChange={handleChange}
                 required
               />
+              {errors.password && <small className="text-danger">{errors.password}</small>}
             </Form.Group>
 
             {/* Confirm Password */}
@@ -94,6 +190,9 @@ const Signup = () => {
                 onChange={handleChange}
                 required
               />
+              {errors.confirmPassword && (
+                <small className="text-danger">{errors.confirmPassword}</small>
+              )}
             </Form.Group>
 
             {/* Role Selection */}
@@ -119,18 +218,17 @@ const Signup = () => {
                   inline
                 />
               </div>
+              {errors.role && <small className="text-danger">{errors.role}</small>}
             </Form.Group>
 
-            {/* Submit Button */}
             <div className="d-grid gap-2 mb-4">
-              <Button variant="primary" type="submit" size="lg">
-                Sign Up
+              <Button variant="primary" type="submit" size="lg" disabled={loading}>
+                {loading ? 'Signing up...' : 'Sign Up'}
               </Button>
             </div>
 
-            {/* Login Link */}
             <div className="text-center">
-              Already have an account? <Link to="/login">LogIn</Link>
+              Already have an account? <Link to="/login">Log In</Link>
             </div>
           </Form>
         </Card.Body>
