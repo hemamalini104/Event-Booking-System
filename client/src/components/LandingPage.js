@@ -55,6 +55,7 @@ const LandingPage = () => {
                 <Button 
                   variant="outline-primary" 
                   size="lg" 
+                  onClick={()=> navigate('/Signup')}
                 >
                   Create Account
                 </Button>

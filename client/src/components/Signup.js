@@ -15,27 +15,69 @@ const Signup = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false); // ✅ added loading state
   const navigate = useNavigate();
 
+  // ✅ Added validation function
+  const validateField = (fieldName, value) => {
+    let error = '';
+
+    switch (fieldName) {
+      case 'username':
+        if (!value.trim()) error = 'Username is required';
+        break;
+      case 'phone':
+        if (!/^\d{10}$/.test(value)) error = 'Phone must be 10 digits';
+        break;
+      case 'email':
+        if (!/\S+@\S+\.\S+/.test(value)) error = 'Invalid email';
+        break;
+      case 'password':
+        if (value.length < 6) error = 'Password must be at least 6 characters';
+        break;
+      case 'confirmPassword':
+        if (value !== formData.password) error = 'Passwords do not match';
+        break;
+      case 'role':
+        if (!value) error = 'Role is required';
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prev) => ({
+      ...prev,
+      [fieldName]: error
+    }));
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+    validateField(name, value); // live validation
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate all fields at once
+    // Validate all fields
     Object.keys(formData).forEach((field) => validateField(field, formData[field]));
 
-    if (Object.keys(errors).length > 0) {
+    if (Object.values(errors).some((err) => err)) {
       return; // Don't submit if there are errors
     }
 
+    setLoading(true);
     console.log('Signup data:', formData);
-    navigate('/dashboard');
+
+    // Fake delay for signup simulation
+    setTimeout(() => {
+      setLoading(false);
+      navigate('/dashboard');
+    }, 1000);
   };
 
   return (
@@ -43,7 +85,7 @@ const Signup = () => {
       <Card className="login-card">
         <Card.Body>
           <h2 className="text-center mb-4">Create Your Account</h2>
-          {Object.keys(errors).length > 0 && (
+          {Object.values(errors).some((err) => err) && (
             <Alert variant="danger" className="text-center">
               Please fix the errors before submitting
             </Alert>
@@ -61,6 +103,7 @@ const Signup = () => {
                 onChange={handleChange}
                 required
               />
+              {errors.username && <small className="text-danger">{errors.username}</small>}
             </Form.Group>
 
             {/* Phone */}
@@ -74,6 +117,7 @@ const Signup = () => {
                 onChange={handleChange}
                 required
               />
+              {errors.phone && <small className="text-danger">{errors.phone}</small>}
             </Form.Group>
 
             {/* Email */}
@@ -87,6 +131,7 @@ const Signup = () => {
                 onChange={handleChange}
                 required
               />
+              {errors.email && <small className="text-danger">{errors.email}</small>}
             </Form.Group>
 
             {/* Password */}
@@ -100,6 +145,7 @@ const Signup = () => {
                 onChange={handleChange}
                 required
               />
+              {errors.password && <small className="text-danger">{errors.password}</small>}
             </Form.Group>
 
             {/* Confirm Password */}
@@ -113,6 +159,9 @@ const Signup = () => {
                 onChange={handleChange}
                 required
               />
+              {errors.confirmPassword && (
+                <small className="text-danger">{errors.confirmPassword}</small>
+              )}
             </Form.Group>
 
             {/* Role Selection */}
@@ -138,6 +187,7 @@ const Signup = () => {
                   inline
                 />
               </div>
+              {errors.role && <small className="text-danger">{errors.role}</small>}
             </Form.Group>
 
             <div className="d-grid gap-2 mb-4">
