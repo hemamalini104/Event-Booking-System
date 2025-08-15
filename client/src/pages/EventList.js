@@ -1,36 +1,30 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+=======
+import React, { useEffect, useState } from "react";
+>>>>>>> c3b583b (message)
 
 export default function EventList() {
   const [events, setEvents] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
+<<<<<<< HEAD
     axios.get('http://localhost:5000/events')
       .then(res => {
         console.log("✅ Events received:", res.data);
         setEvents(res.data);
       })
       .catch(err => console.log("❌ Error fetching events:", err));
+=======
+    const storedEvents = JSON.parse(localStorage.getItem("events")) || [];
+    setEvents(storedEvents);
+>>>>>>> c3b583b (message)
   }, []);
 
-  const handleBook = (event) => {
-    const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-    const newTransaction = {
-      id: Date.now(),
-      eventId: event.id,
-      eventTitle: event.title,
-      amount: 100, // Fixed amount for demo
-      date: new Date().toLocaleString(),
-    };
-    transactions.push(newTransaction);
-    localStorage.setItem('transactions', JSON.stringify(transactions));
-    alert('Booking Successful!');
-    navigate('/my-transactions');
-  };
-
   return (
+<<<<<<< HEAD
     <div className="container mt-4">
       <h2 className="mb-4">Available Events</h2>
       <div className="row">
@@ -49,9 +43,40 @@ export default function EventList() {
                 <Link to={`/organizer/edit/${event.id}`} className="btn btn-warning mt-2 ms-2">Edit</Link>
               </div>
             </div>
+=======
+    <div style={{ padding: "20px" }}>
+      <h2>Available Events</h2>
+      {events.length === 0 ? (
+        <p>No events available.</p>
+      ) : (
+        events.map((event) => (
+          <div
+            key={event.id}
+            style={{
+              border: "1px solid #ccc",
+              marginBottom: "15px",
+              padding: "10px",
+              borderRadius: "5px"
+            }}
+          >
+            {event.banner && (
+              <img
+                src={event.banner}
+                alt="Event Banner"
+                style={{ width: "100%", height: "200px", objectFit: "cover" }}
+              />
+            )}
+            <h3>{event.title}</h3>
+            <p>
+              {event.date} at {event.time}
+            </p>
+            <p><strong>Location:</strong> {event.location}</p>
+            <p><strong>Category:</strong> {event.category}</p>
+            <p>{event.description}</p>
+>>>>>>> c3b583b (message)
           </div>
-        ))}
-      </div>
+        ))
+      )}
     </div>
   );
 }

@@ -76,8 +76,39 @@ const Signup = () => {
     // Fake delay for signup simulation
     setTimeout(() => {
       setLoading(false);
+<<<<<<< HEAD
       navigate('/dashboard');
     }, 1000);
+=======
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:8000/api/accounts/register/', {
+        username : name,
+        email,
+        password
+      });
+
+      setSuccess('Signup successful! Redirecting...');
+      setLoading(false);
+
+      // If backend sends JWT token and you want to store it:
+      // localStorage.setItem('token', response.data.token);
+
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+      if (err.response && err.response.data) {
+        setError(err.response.data.detail || 'Signup failed. Please try again.');
+      } else {
+        setError('Server error. Please try again later.');
+      }
+    }
+>>>>>>> c3b583b (message)
   };
 
   return (
