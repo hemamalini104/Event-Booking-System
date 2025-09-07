@@ -1,0 +1,58 @@
+.event-details-page {
+  padding: 2rem 0;
+}
+
+.event-main-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.event-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.event-meta .meta-item {
+  margin-bottom: 0.5rem;
+  color: #6c757d;
+}
+
+.booking-summary {
+  position: sticky;
+  top: 20px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-display {
+  font-size: 1.2rem;
+  font-weight: 600;
+  min-width: 30px;
+  text-align: center;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: #6c63ff;
+  color: white;
+  border-color: #6c63ff;
+}
+
+@media (max-width: 768px) {
+  .event-title {
+    font-size: 2rem;
+  }
+  
+  .quantity-selector {
+    justify-content: flex-start;
+    margin-top: 1rem;
+  }
+}

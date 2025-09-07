@@ -1,30 +1,24 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-=======
 import React, { useEffect, useState } from "react";
->>>>>>> c3b583b (message)
 
 export default function EventList() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-<<<<<<< HEAD
     axios.get('http://localhost:5000/events')
       .then(res => {
         console.log("✅ Events received:", res.data);
         setEvents(res.data);
       })
       .catch(err => console.log("❌ Error fetching events:", err));
-=======
+
     const storedEvents = JSON.parse(localStorage.getItem("events")) || [];
     setEvents(storedEvents);
->>>>>>> c3b583b (message)
   }, []);
 
   return (
-<<<<<<< HEAD
     <div className="container mt-4">
       <h2 className="mb-4">Available Events</h2>
       <div className="row">
@@ -43,7 +37,6 @@ export default function EventList() {
                 <Link to={`/organizer/edit/${event.id}`} className="btn btn-warning mt-2 ms-2">Edit</Link>
               </div>
             </div>
-=======
     <div style={{ padding: "20px" }}>
       <h2>Available Events</h2>
       {events.length === 0 ? (
@@ -73,10 +66,7 @@ export default function EventList() {
             <p><strong>Location:</strong> {event.location}</p>
             <p><strong>Category:</strong> {event.category}</p>
             <p>{event.description}</p>
->>>>>>> c3b583b (message)
           </div>
+          
         ))
       )}
-    </div>
-  );
-}
