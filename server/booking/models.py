@@ -19,7 +19,7 @@ class Booking(models.Model):
     ticket_type = models.CharField(max_length=50, choices=[("free", "Free"), ("paid", "Paid")], default="paid")
     quantity = models.PositiveIntegerField(default=1)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    payment_status = models.CharField(max_length=20, choices=[("pending", "Pending"), ("completed", "Completed")], default="pending")
+    payment_status = models.CharField(max_length=20, choices=[("pending", "Pending"), ("completed", "Completed")], default="Completed")
     ticket_file = models.FileField(upload_to="tickets/", null=True, blank=True)  
 
     def __str__(self):
